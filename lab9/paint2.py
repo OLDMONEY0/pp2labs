@@ -1,15 +1,15 @@
 import pygame
-
+pygame.init()
 
 WIDTH, HEIGHT = 1200, 800   # базовый размер окна
 FPS = 60
 draw = False                # нажатие, зажатие - рисуем, отжали - не рисуем 
-lastPos = (0, 0)            # базовая позиция 
-radius = 8            # базовый радиус для инструментов
+lPos = (0, 0)            # базовая позиция 
+rad = 8                  # базовый радиус для инструментов
 color = 'blue'              # базовый цвет
 mode = 'pen'                # базовый режим
 
-pygame.init()
+
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption('Paint')
 clock = pygame.time.Clock()
@@ -54,7 +54,7 @@ def drawCircle(screen, start, end, width, color):
     x = (x1 + x2) / 2
     y = (y1 + y2) / 2
     radius = abs(x1 - x2) / 2
-    pygame.draw.circle(screen, pygame.Color(color), (x, y), radius, width)
+    pygame.draw.circle(screen, pygame.Color(color), (x, y), rad, width)
 
 
 def drawRectangle(screen, start, end, width, color):
@@ -162,44 +162,44 @@ while True:
             if event.key == pygame.K_h:
                 mode = 'rhombus'
             if event.key == pygame.K_UP:
-                radius = min(200, radius + 1)   # ограничение по максимальному размеру радиуса
+                radius = min(200, rad + 1)   # ограничение по максимальному размеру радиуса
             if event.key == pygame.K_DOWN:
-                radius = max(1, radius - 1)     # ограничение по минимальному размеру радиуса
+                radius = max(1, rad - 1)     # ограничение по минимальному размеру радиуса
 
         # Нажатие на мышку
         if event.type == pygame.MOUSEBUTTONDOWN: 
             draw = True
             if mode == 'pen':
-                pygame.draw.circle(screen, pygame.Color(color), event.pos, radius)
+                pygame.draw.circle(screen, pygame.Color(color), event.pos, rad)
             prevPos = event.pos
 
         # Отпускание мышки
         if event.type == pygame.MOUSEBUTTONUP: 
             if mode == 'rectangle':
-                drawRectangle(screen, prevPos, event.pos, radius, color)
+                drawRectangle(screen, prevPos, event.pos, rad, color)
             elif mode == 'circle':
-                drawCircle(screen, prevPos, event.pos, radius, color)
+                drawCircle(screen, prevPos, event.pos, rad, color)
             elif mode == 'square':
-                drawSquare(screen, prevPos, event.pos, radius, color)
+                drawSquare(screen, prevPos, event.pos, rad, color)
             elif mode == 'right_tri':
-                drawRightTriangle(screen, prevPos, event.pos, radius, color)
+                drawRightTriangle(screen, prevPos, event.pos, rad, color)
             elif mode == 'eq_tri':
-                drawEquilateralTriangle(screen, prevPos, event.pos, radius, color)
+                drawEquilateralTriangle(screen, prevPos, event.pos, rad, color)
             elif mode == 'rhombus':
-                drawRhombus(screen, prevPos, event.pos, radius, color)
+                drawRhombus(screen, prevPos, event.pos, rad, color)
             draw = False
 
         # Перемещение мышки
         if event.type == pygame.MOUSEMOTION: 
             if draw and mode == 'pen':
-                drawLine(screen, lastPos, event.pos, radius, color)
+                drawLine(screen, lPos, event.pos, radius, color)
             elif draw and mode == 'erase':
-                drawLine(screen, lastPos, event.pos, radius, 'white')
-            lastPos = event.pos
+                drawLine(screen, lPos, event.pos, radius, 'white')
+            lPos = event.pos
 
     # show radius & color
     pygame.draw.rect(screen, pygame.Color('white'), (5, 5, 115, 75))
-    renderRadius = fontRadius.render(f'{radius}', True, pygame.Color(color))
+    renderRadius = fontRadius.render(f'{rad}', True, pygame.Color(color))
     screen.blit(renderRadius, (5, 5))
 
     # display
